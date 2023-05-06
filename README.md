@@ -18,6 +18,7 @@ alla
 ![screenshot](screenshot.jpg)
 
 ## Description
+
 TODO:
 - 立直、流局時聴牌の計算
 - 同点の処理
