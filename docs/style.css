@@ -17,6 +17,7 @@ body {
     border: 4px solid green;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    float: left;
 }
 
 #current_status div.player{
@@ -46,14 +47,21 @@ body {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
 }
-div.pot table {
+
+div.pot {
     margin: auto;
 }
-
-div.pot table .label{
-    font-weight: normal;
-    text-align: right;
-    padding-right: 1em;
+div.pot p {
+    font-size: smaller;
+    vertical-align: middle;
+}
+div.pot span {
+    display: inline-block;
+}
+div.pot .label {
+}
+div.pot .unit {
+    font-size: smaller;
 }
 
 #current_status .name{
@@ -65,23 +73,35 @@ div.pot table .label{
     color: darkred;
 }
 
-#calc_and_result .panel {
+#calc_basic .panel {
     border: 1px solid grey;
     padding: 0.5em;
     margin: 1em;
 }
 
-.result .score {
+#area_basic_result {
+    width: 15em;
+    float: left;
+}
+#basic_result {
+    border: 1px solid grey;
+    padding: 0.5em;
+    margin: 1em;
+}
+#basic_result .score {
     color: darkgrey;
 }
 
+div.clear_float {
+    clear: both;
+}
 
 input.point {
     width: 4em;
 }
 input.score {
-    width: 6em;
+    width: 5.5em;
 }
 input.pot {
-    width: 2em;
+    width: 3em;
 }

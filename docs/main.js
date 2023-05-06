@@ -26,7 +26,7 @@ const VueApp = {
     //-- variables--
     data() {
         return {
-            error_msg: "",
+            txtErrorMsg: "",
 
             initial_score: 25000, //配給原点
             origin_score: 30000, //清算原点
@@ -48,6 +48,8 @@ const VueApp = {
 
             scoreRon: 3900,
             playerRonFrom: 1,
+
+            labelCalcType: "",
         }
     },
 
@@ -61,6 +63,7 @@ const VueApp = {
                 this.players[i].scoreResult = this.players[i].scoreCurrent;
             }
             this.calcPoints();
+            this.labelCalcType = "流局"
         },
         procRon() {
             this.players[0].scoreResult = this.players[0].scoreCurrent + this.scoreRon + this.potReach * 1000 + this.potStack * 300;
@@ -70,6 +73,7 @@ const VueApp = {
             this.players[this.playerRonFrom].scoreResult = this.players[this.playerRonFrom].scoreResult - this.scoreRon - this.potStack * 300;
 
             this.calcPoints();
+            this.labelCalcType = "ロン"
         },
         procTsumo() {
             this.players[0].scoreResult = this.players[0].scoreCurrent + this.potReach * 1000 + this.potStack * 300;
@@ -80,6 +84,7 @@ const VueApp = {
             }
             console.log(this.players);
             this.calcPoints();
+            this.labelCalcType = "ツモ"
         },
 
         //--- ポイント計算
@@ -105,9 +110,9 @@ const VueApp = {
             let init = this.initial_score * 4;
             let cur = this.players.reduce((sum, pl) => sum + pl.scoreCurrent, this.potReach * 1000);
             if (init != cur) {
-                this.error_msg = "持ち点の合計が初期状態と相違しています";
+                this.txtErrorMsg = "持ち点の合計が初期状態と相違しています";
             } else {
-                this.error_msg = "";
+                this.txtErrorMsg = "";
             }
         },
 

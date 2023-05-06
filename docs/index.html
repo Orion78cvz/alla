@@ -43,28 +43,23 @@
             </template>
 
             <div class="pot">
-                <table>
-                    <tr>
-                        <th class="label">積み棒: </th>
-                        <td><input class="pot" type="number" min="0" step="1" v-model.number="potStack" /></td>
-                        <td>(x300)</td></p>
-                    </tr>
-                    <tr>
-                        <th class="label">リーチ棒: </th>
-                        <td><input class="pot" type="number" min="0" step="1" v-model.number="potReach" /></td>
-                        <td>(x1000)</td></p>
-                    </tr>
-                </table>
+                <p>
+                    <span class="label">積み棒: </span>
+                    <span><input class="pot" type="number" min="0" step="1" v-model.number="potStack" /></span>
+                    <span class="unit">(x300)</span>
+                </p>
+                <p>
+                    <span class="label">リーチ棒: </span>
+                    <span><input class="pot" type="number" min="0" step="1" v-model.number="potReach" /></span>
+                    <span class="unit">(x1000)</span>
+                </p>
             </div>
 
         </div>
 
-        <div id="calc_and_result">
-            <h4>計算</h4>
-            <p class="error" v-show="error_msg">{{ error_msg }}</p>
-
-            <div class="panel result" v-if="typeof players[0].pointResult !== 'undefined'">
-                <p>結果</p>
+        <div id="area_basic_result">
+            <div id="basic_result" v-if="typeof players[0].pointResult !== 'undefined'">
+                <p v-show="labelCalcType">{{ labelCalcType }}</p>
                 <table>
                     <tr v-for="(player, i) in players">
                         <td><span class="name">{{ player.name }}</span></td>
@@ -73,6 +68,14 @@
                     </tr>
                 </table>
             </div>
+        </div>
+
+        <div class="clear_float"></div>
+
+        <p class="error" v-show="txtErrorMsg">{{ txtErrorMsg }}</p>
+
+        <div id="calc_basic">
+            <h4>計算</h4>
 
             <div class="panel drawn">
                 <button @click.prevent="procDrawn">流局</button>
