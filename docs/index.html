@@ -74,13 +74,17 @@
 
         <p class="error" v-show="txtErrorMsg">{{ txtErrorMsg }}</p>
 
+        <h4>計算</h4>
         <div id="calc_basic">
-            <h4>計算</h4>
-
+            <input type="radio" name="tab_name" id="tab_drawn" checked>
+            <label class="tab_class" for="tab_drawn">流局</label>
             <div class="panel drawn">
                 <button @click.prevent="procDrawn">流局</button>
                 (全員ノーテンorテンパイ)
             </div>
+
+            <input type="radio" name="tab_name" id="tab_tsumo">
+            <label class="tab_class" for="tab_tsumo">ツモ</label>
             <div class="panel tsumo">
                 <button @click.prevent="procTsumo">ツモ</button>
                 <p v-if="players[0].isLeader">
@@ -91,6 +95,9 @@
                     <input class="score" type="number" min="0" step="100" v-model.number="scoreTsumoFromLeader" /> 点
                 </p>
             </div>
+
+            <input type="radio" name="tab_name" id="tab_ron">
+            <label class="tab_class" for="tab_ron">ロン</label>
             <div class="panel ron">
                 <button @click.prevent="procRon">ロン</button>
                 <p>
@@ -105,6 +112,7 @@
                 </p>
             </div>
 
+            <div class="clear_float"></div>
         </div>
     </div>
     <script src="./main.js"></script>
