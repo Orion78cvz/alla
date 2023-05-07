@@ -19,12 +19,45 @@ input.pot {
     width: 3em;
 }
 
-/*ウマオカ*/
-#conf_bonus {
-    margin: 1em;
-    padding: 1em;
-    border: 2px solid black;
+/* タブ汎用 */
+div.tab_group {
+    flex-wrap: wrap;
+    display: flex;
 }
+div.tab_group .tab {
+    width: 6em;
+    background-color: darkgrey;
+    line-height: 1.5em;
+    text-align: center;
+    display: block;
+    float: left;
+    order: -1;
+}
+div.tab_group input[name$="tab_name"] {
+    display: none;
+}
+div.tab_group input:checked + .tab {
+    background-color: darkcyan;
+    color: white;
+}
+div.tab_group .panel {
+    border: 2px solid darkcyan;
+    display: none;
+    width: 100%;
+    margin: 0px;
+    padding: 1em;
+}
+div.tab_group input:checked + .tab + .panel {
+    display: block;
+}
+
+/*設定用タブ*/
+#config_group .tab {
+}
+#config_group td input {
+    margin-right: 1em;
+}
+
 
 /*メインパネル*/
 #current_status {
@@ -102,34 +135,7 @@ div.pot .unit {
     color: darkgrey;
 }
 
-/*計算駆動用UI*/
-#calc_basic {
-    flex-wrap: wrap;
-    display: flex;
-}
-#calc_basic .tab_class {
+/*計算駆動用タブ*/
+#calc_basic_group .tab {
     width: 6em;
-    background-color: darkgrey;
-    line-height: 1.5em;
-    text-align: center;
-    display: block;
-    float: left;
-    order: -1;
-}
-#calc_basic input[name="tab_name"] {
-    display: none;
-}
-#calc_basic input:checked + .tab_class {
-    background-color: darkcyan;
-    color: white;
-}
-#calc_basic .panel {
-border: 2px solid darkcyan;
-    display: none;
-    width: 100%;
-    margin: 0px;
-    padding: 1em;
-}
-#calc_basic input:checked + .tab_class + .panel {
-    display: block;
 }

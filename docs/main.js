@@ -115,6 +115,7 @@ const VueApp = {
                 this.txtErrorMsg = "";
             }
         },
+        //TODO: <input>が空欄等になっている場合の処理
 
         //--- その他UI
         onChangeLeader(pi) {
