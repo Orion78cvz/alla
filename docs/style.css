@@ -146,6 +146,20 @@ div.pot .unit {
     padding: 0.4em;
 }
 
+table.score_table .han {
+    text-align: right;
+}
+table.score_table th {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+table.score_table .score {
+    text-align: center;
+}
+table.score_table .score.fixed {
+    text-align: center;
+}
+
 /*計算駆動用タブ*/
 #calc_basic_group .tab {
     width: 6em;

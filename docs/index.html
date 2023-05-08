@@ -51,11 +51,11 @@
 
         <div id="current_status">
             <template v-for="(player, i) in players">
-                <div v-bind:class="['player', player_positions[i]]">
+                <div v-bind:class="['player', player_positions_label[i]]">
                     <p>
                         <span class="name">{{ player.name }}</span>
                         <span class="isleader" v-if="player.isLeader">[親]</span>
-                        <span class="isleader" v-else><label>&nbsp;<input type="checkbox" v-model="player.isLeader" v-on:change="onChangeLeader(i)" />&nbsp;</label></span>
+                        <span v-else><label>&nbsp;<input type="checkbox" v-model="player.isLeader" v-on:change="onChangeLeader(i)" />&nbsp;</label></span>
                     </p>
                     <p class="score"><input class="score" type="number" min="0" step="100" v-model.number="player.scoreCurrent" />点</p>
                 </div>
@@ -114,6 +114,46 @@
                     <input class="score" type="number" min="100" step="100" v-model.number="scoreTsumo" /> /
                     <input class="score" type="number" min="100" step="100" v-model.number="scoreTsumoFromLeader" /> 点
                 </p>
+
+                <table class="score_table" v-show="players[0].isLeader">
+                    <tr><th class="isleader">[親]</th> <th v-for="l in score_table.head.tsumo">{{ l }}</th></tr>
+                    <tr v-for="(han, i) in score_table.head.rows">
+                        <th class="han">{{ han }}</th>
+                        <template v-if="score_table.data.tsumo.leader[i].length == 1">
+                            <td class="score fixed" v-bind:colspan="score_table.head.rows.length">{{ score_table.data.tsumo.leader[i][0][0] }}a</td>
+                        </template>
+                        <template v-else>
+                            <td class="score" v-for="s in score_table.data.tsumo.leader[i]">
+                                <template v-if="s !== null">
+                                    {{ s[0] }}a
+                                </template>
+                                <template v-else>
+                                    &nbsp;
+                                </template>
+                            </td>
+                        </template>
+                    </tr>
+                </table>
+                <table class="score_table" v-show="!players[0].isLeader">
+                    <tr><th></th> <th v-for="l in score_table.head.tsumo">{{ l }}</th></tr>
+                    <tr v-for="(han, i) in score_table.head.rows">
+                        <th class="han">{{ han }}</th>
+                        <template v-if="score_table.data.tsumo.player[i].length == 1">
+                            <td class="score fixed" v-bind:colspan="score_table.head.rows.length">{{ score_table.data.tsumo.player[i][0][0] }}/{{ score_table.data.tsumo.player[i][0][1] }}</td>
+                        </template>
+                        <template v-else>
+                            <td class="score" v-for="s in score_table.data.tsumo.player[i]">
+                                <template v-if="s !== null">
+                                    {{ s[0] }}/{{ s[1] }}
+                                </template>
+                                <template v-else>
+                                    &nbsp;
+                                </template>
+                            </td>
+                        </template>
+                    </tr>
+                </table>
+
             </div>
 
             <input type="radio" name="calc_basic_tab_name" id="tab_ron">
@@ -127,9 +167,35 @@
                         <option value="3">{{players[3].name}}</option>
                     </select>
                     から
-                    <input class="score" type="number" min="100" step="100" v-model.number="scoreRon"/>
+                    <input class="score" type="number" min="100" step="100" v-model.number="scoreRon" />
                     点
                 </p>
+
+                <table class="score_table" v-show="players[0].isLeader">
+                    <tr><th class="isleader">[親]</th> <th v-for="l in score_table.head.ron">{{ l }}</th></tr>
+                    <tr v-for="(han, i) in score_table.head.rows">
+                        <th class="han">{{ han }}</th>
+                        <template v-if="score_table.data.ron.leader[i].length == 1">
+                            <td class="score fixed" v-bind:colspan="score_table.head.rows.length">{{ score_table.data.ron.leader[i][0] }}</td>
+                        </template>
+                        <template v-else>
+                            <td class="score" v-for="s in score_table.data.ron.leader[i]">{{ s }}</td>
+                        </template>
+                    </tr>
+                </table>
+                <table class="score_table" v-show="!players[0].isLeader">
+                    <tr><th></th> <th v-for="l in score_table.head.ron">{{ l }}</th></tr>
+                    <tr v-for="(han, i) in score_table.head.rows">
+                        <th class="han">{{ han }}</th>
+                        <template v-if="score_table.data.ron.player[i].length == 1">
+                            <td class="score fixed" v-bind:colspan="score_table.head.rows.length">{{ score_table.data.ron.player[i][0] }}</td>
+                        </template>
+                        <template v-else>
+                            <td class="score" v-for="s in score_table.data.ron.player[i]">{{ s }}</td>
+                        </template>
+                    </tr>
+                </table>
+
             </div>
 
             <div class="clear_float"></div>

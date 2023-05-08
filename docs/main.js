@@ -40,7 +40,9 @@ const VueApp = {
                 new PlayerInfo("下家", false, 35000, 0),
                 new PlayerInfo("対面", false, 30000, 0),
                 new PlayerInfo("上家", true, 15000, 0)],
-            player_positions: ["me", "right", "opposite", "left"],
+            player_positions_label: ["me", "right", "opposite", "left"],
+
+            score_table: score_table,
 
             potStack: 0, //積み棒
             potReach: 0, //立直棒(キャリーオーバー分のみ)
