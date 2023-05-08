@@ -123,16 +123,27 @@ div.pot .unit {
 
 /*計算結果*/
 #area_basic_result {
-    width: 15em;
+    min-width: 14em;
     float: left;
 }
 #basic_result {
     border: 1px solid grey;
+    background-color: snow;
     padding: 0.5em;
     margin: 1em;
 }
 #basic_result .score {
     color: darkgrey;
+}
+#basic_result .point.rank0 {
+    font-weight: bold;
+    color: dodgerblue;
+}
+#basic_result th {
+    font-weight: normal;
+    font-size: smaller;
+    text-align: center;
+    padding: 0.4em;
 }
 
 /*計算駆動用タブ*/

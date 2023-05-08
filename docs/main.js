@@ -1,3 +1,5 @@
+import { score_table } from "./score_table.js";
+
 ///////
 //
 //
@@ -98,11 +100,18 @@ const VueApp = {
                 let s = pl.scoreResult + puma[pl.rankScoreResult] * 1000 + soka[pl.rankScoreResult] - this.origin_score;
                 pl.pointResult = pl.pointCurrent + s / 1000;
             }
+
+            this.calcPointRanking();
         },
         calcScoreRanking() {
             //todo: 同点起家有利の処理 (比較時スコアに起家から3,2,1,0加算すればよさそう)
             let sorted = this.players.slice().sort((a, b) => b.scoreResult - a.scoreResult);
             for (let i = 0; i < 4; i++) { sorted[i].rankScoreResult = i; }
+        },
+        calcPointRanking() {
+            //todo: 同点先着有利の処理
+            let sorted = this.players.slice().sort((a, b) => b.pointResult - a.pointResult);
+            for (let i = 0; i < 4; i++) { sorted[i].rankpointResult = i; }
         },
 
         //--- validation

@@ -80,9 +80,10 @@
             <div id="basic_result" v-if="typeof players[0].pointResult !== 'undefined'">
                 <p v-show="labelCalcType">{{ labelCalcType }}</p>
                 <table>
+                    <tr><th></th><th>累計pt</th><th>半荘得点</th></tr>
                     <tr v-for="(player, i) in players">
                         <td><span class="name">{{ player.name }}</span></td>
-                        <td><span class="point">{{ formatPointResult(player.pointResult) }}</span></td>
+                        <td><span v-bind:class="`point rank${player.rankpointResult}`">{{ formatPointResult(player.pointResult) }}</span></td>
                         <td><span class="score">({{ player.scoreResult }})</span></td>
                     </tr>
                 </table>
@@ -135,7 +136,7 @@
         </div>
 
     </div>
-    <script src="./main.js"></script>
+    <script type="module" src="./main.js"></script>
 </body>
 
 </html>
