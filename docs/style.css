@@ -146,12 +146,23 @@ div.pot .unit {
     padding: 0.4em;
 }
 
-table.score_table .han {
-    text-align: right;
+table.score_table {
+    border-style: solid;
 }
 table.score_table th {
     white-space: pre-wrap;
     word-wrap: break-word;
+    text-align: right;
+    width: calc(100% / 5);
+    background: ivory;
+    border: 1px solid;
+    text-align: center;
+}
+table.score_table th.han {
+    text-align: right;
+}
+table.score_table td {
+    border: 1px dotted;
 }
 table.score_table .score {
     text-align: center;

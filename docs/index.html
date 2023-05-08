@@ -106,13 +106,16 @@
             <input type="radio" name="calc_basic_tab_name" id="tab_tsumo">
             <label class="tab" for="tab_tsumo">ツモ</label>
             <div class="panel tsumo">
-                <button @click.prevent="procTsumo">ツモ</button>
-                <p v-if="players[0].isLeader">
-                    <input class="score" type="number" min="100" step="100" v-model.number="scoreTsumo" /> 点オール
-                </p>
-                <p v-else>
-                    <input class="score" type="number" min="100" step="100" v-model.number="scoreTsumo" /> /
-                    <input class="score" type="number" min="100" step="100" v-model.number="scoreTsumoFromLeader" /> 点
+                <p>
+                    {{ players[0].name }} が
+                    <template v-if="players[0].isLeader">
+                        <input class="score" type="number" min="100" step="100" v-model.number="scoreTsumo" /> 点オール
+                    </template>
+                    <template v-else>
+                        <input class="score" type="number" min="100" step="100" v-model.number="scoreTsumo" /> /
+                        <input class="score" type="number" min="100" step="100" v-model.number="scoreTsumoFromLeader" /> 点
+                    </template>
+                    <button @click.prevent="procTsumo">ツモ</button>
                 </p>
 
                 <table class="score_table" v-show="players[0].isLeader">
@@ -120,10 +123,10 @@
                     <tr v-for="(han, i) in score_table.head.rows">
                         <th class="han">{{ han }}</th>
                         <template v-if="score_table.data.tsumo.leader[i].length == 1">
-                            <td class="score fixed" v-bind:colspan="score_table.head.rows.length">{{ score_table.data.tsumo.leader[i][0][0] }}a</td>
+                            <td class="score fixed" v-bind:colspan="score_table.head.rows.length" v-on:click="setScoreTsumo(score_table.data.tsumo.leader[i][0], true)">{{ score_table.data.tsumo.leader[i][0][0] }}a</td>
                         </template>
                         <template v-else>
-                            <td class="score" v-for="s in score_table.data.tsumo.leader[i]">
+                            <td class="score" v-for="s in score_table.data.tsumo.leader[i]" v-on:click="setScoreTsumo(s, true)">
                                 <template v-if="s !== null">
                                     {{ s[0] }}a
                                 </template>
@@ -139,10 +142,10 @@
                     <tr v-for="(han, i) in score_table.head.rows">
                         <th class="han">{{ han }}</th>
                         <template v-if="score_table.data.tsumo.player[i].length == 1">
-                            <td class="score fixed" v-bind:colspan="score_table.head.rows.length">{{ score_table.data.tsumo.player[i][0][0] }}/{{ score_table.data.tsumo.player[i][0][1] }}</td>
+                            <td class="score fixed" v-bind:colspan="score_table.head.rows.length" v-on:click="setScoreTsumo(score_table.data.tsumo.player[i][0], true)">{{ score_table.data.tsumo.player[i][0][0] }}/{{ score_table.data.tsumo.player[i][0][1] }}</td>
                         </template>
                         <template v-else>
-                            <td class="score" v-for="s in score_table.data.tsumo.player[i]">
+                            <td class="score" v-for="s in score_table.data.tsumo.player[i]" v-on:click="setScoreTsumo(s, true)">
                                 <template v-if="s !== null">
                                     {{ s[0] }}/{{ s[1] }}
                                 </template>
@@ -153,14 +156,15 @@
                         </template>
                     </tr>
                 </table>
+                <p>* 表の点数をクリック/タップで計算</p>
 
             </div>
 
             <input type="radio" name="calc_basic_tab_name" id="tab_ron">
             <label class="tab" for="tab_ron">ロン</label>
             <div class="panel ron">
-                <button @click.prevent="procRon">ロン</button>
                 <p>
+                    {{ players[0].name }} が
                     <select v-model.number="playerRonFrom">
                         <option value="1">{{players[1].name}}</option>
                         <option value="2">{{players[2].name}}</option>
@@ -169,6 +173,7 @@
                     から
                     <input class="score" type="number" min="100" step="100" v-model.number="scoreRon" />
                     点
+                    <button @click.prevent="procRon">ロン</button>
                 </p>
 
                 <table class="score_table" v-show="players[0].isLeader">
@@ -176,10 +181,15 @@
                     <tr v-for="(han, i) in score_table.head.rows">
                         <th class="han">{{ han }}</th>
                         <template v-if="score_table.data.ron.leader[i].length == 1">
-                            <td class="score fixed" v-bind:colspan="score_table.head.rows.length">{{ score_table.data.ron.leader[i][0] }}</td>
+                            <td class="score fixed" v-bind:colspan="score_table.head.rows.length" v-on:click="setScoreRon(score_table.data.ron.leader[i][0], true)">{{ score_table.data.ron.leader[i][0] }}</td>
                         </template>
                         <template v-else>
-                            <td class="score" v-for="s in score_table.data.ron.leader[i]">{{ s }}</td>
+                            <td class="score" v-for="s in score_table.data.ron.leader[i]" v-on:click="setScoreRon(s, true)">
+                                <template v-if="s !== null">
+                                    {{ s }}
+                                </template>
+                                <template v-else>&nbsp;</template>
+                            </td>
                         </template>
                     </tr>
                 </table>
@@ -188,13 +198,20 @@
                     <tr v-for="(han, i) in score_table.head.rows">
                         <th class="han">{{ han }}</th>
                         <template v-if="score_table.data.ron.player[i].length == 1">
-                            <td class="score fixed" v-bind:colspan="score_table.head.rows.length">{{ score_table.data.ron.player[i][0] }}</td>
+                            <td class="score fixed" v-bind:colspan="score_table.head.rows.length" v-on:click="setScoreRon(score_table.data.ron.player[i][0], true)">{{ score_table.data.ron.player[i][0] }}</td>
                         </template>
                         <template v-else>
-                            <td class="score" v-for="s in score_table.data.ron.player[i]">{{ s }}</td>
+                            <td class="score" v-for="s in score_table.data.ron.player[i]" v-on:click="setScoreRon(s, true)">
+                                <template v-if="s !== null">
+                                    {{ s }}
+                                </template>
+                                <template v-else>&nbsp;</template>
+                            </td>
                         </template>
                     </tr>
                 </table>
+                <p>* 表の点数をクリック/タップで計算</p>
+
 
             </div>
 

@@ -54,6 +54,7 @@ const VueApp = {
             playerRonFrom: 1,
 
             labelCalcType: "",
+            txtCalcMsg: "",
         }
     },
 
@@ -67,7 +68,7 @@ const VueApp = {
                 this.players[i].scoreResult = this.players[i].scoreCurrent;
             }
             this.calcPoints();
-            this.labelCalcType = "流局"
+            this.labelCalcType = "流局";
         },
         procRon() {
             this.players[0].scoreResult = this.players[0].scoreCurrent + this.scoreRon + this.potReach * 1000 + this.potStack * 300;
@@ -77,7 +78,7 @@ const VueApp = {
             this.players[this.playerRonFrom].scoreResult = this.players[this.playerRonFrom].scoreResult - this.scoreRon - this.potStack * 300;
 
             this.calcPoints();
-            this.labelCalcType = "ロン"
+            this.labelCalcType = "ロン";
         },
         procTsumo() {
             this.players[0].scoreResult = this.players[0].scoreCurrent + this.potReach * 1000 + this.potStack * 300;
@@ -88,7 +89,7 @@ const VueApp = {
             }
             console.log(this.players);
             this.calcPoints();
-            this.labelCalcType = "ツモ"
+            this.labelCalcType = "ツモ";
         },
 
         //--- ポイント計算
@@ -133,9 +134,23 @@ const VueApp = {
             for (let pl of this.players) { pl.isLeader = false; }
             this.players[pi].isLeader = true;
         },
+        setScoreRon(score, runproc) {
+            if (score) {
+                this.scoreRon = score;
+            }
+            if (runproc) this.procRon();
+        },
+        setScoreTsumo(scores, runproc) {
+            if (scores) {
+                this.scoreTsumo = scores[0];
+                this.scoreTsumoFromLeader = scores[1];
+            }
+            if (runproc) this.procTsumo();
+        },
         formatPointResult(num) {
             return (num > 0 ? "+" : "") + num.toFixed(1);
         },
+
 
     }
 };
