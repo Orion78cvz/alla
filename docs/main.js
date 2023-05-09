@@ -54,7 +54,7 @@ const VueApp = {
             playerRonFrom: 1,
 
             labelCalcType: "",
-            txtCalcMsg: "",
+            listScoreDiff: [],
         }
     },
 
@@ -62,15 +62,19 @@ const VueApp = {
     methods: {
 
         //--- 条件計算
+
         procDrawn() {
             //todo: 聴牌料計算
             for (let i = 0; i < 4; i++) {
                 this.players[i].scoreResult = this.players[i].scoreCurrent;
             }
             this.calcPoints();
+
             this.labelCalcType = "流局";
+            this.outputScoreDifference();
         },
         procRon() {
+            //info: ダブロンはひとまず非対応
             this.players[0].scoreResult = this.players[0].scoreCurrent + this.scoreRon + this.potReach * 1000 + this.potStack * 300;
             for (let i = 1; i < 4; i++) {
                 this.players[i].scoreResult = this.players[i].scoreCurrent;
@@ -78,7 +82,9 @@ const VueApp = {
             this.players[this.playerRonFrom].scoreResult = this.players[this.playerRonFrom].scoreResult - this.scoreRon - this.potStack * 300;
 
             this.calcPoints();
+
             this.labelCalcType = "ロン";
+            this.outputScoreDifference();
         },
         procTsumo() {
             this.players[0].scoreResult = this.players[0].scoreCurrent + this.potReach * 1000 + this.potStack * 300;
@@ -89,10 +95,12 @@ const VueApp = {
             }
             console.log(this.players);
             this.calcPoints();
+
             this.labelCalcType = "ツモ";
+            this.outputScoreDifference();
         },
 
-        //--- ポイント計算
+        //ポイント、順位計算
         calcPoints() {
             this.checkTotalScore();
             this.calcScoreRanking();
@@ -117,19 +125,30 @@ const VueApp = {
             for (let i = 0; i < 4; i++) { sorted[i].rankpointResult = i; }
         },
 
+        //点数変動を計算
+        outputScoreDifference() {
+            this.listScoreDiff.splice(0);
+            for (let pl of this.players) {
+                let d = pl.scoreResult - pl.scoreCurrent;
+                if (d == 0) continue;
+                this.listScoreDiff.push([pl.name, (d > 0 ? "+" : "") + d.toString()]);
+            }
+        },
+
         //--- validation
+
         checkTotalScore() {
+            this.txtErrorMsg = "";
             let init = this.initial_score * 4;
             let cur = this.players.reduce((sum, pl) => sum + pl.scoreCurrent, this.potReach * 1000);
             if (init != cur) {
                 this.txtErrorMsg = "持ち点の合計が初期状態と相違しています";
-            } else {
-                this.txtErrorMsg = "";
             }
         },
         //TODO: <input>が空欄等になっている場合の処理
 
         //--- その他UI
+
         onChangeLeader(pi) {
             for (let pl of this.players) { pl.isLeader = false; }
             this.players[pi].isLeader = true;

@@ -131,11 +131,16 @@ div.pot .unit {
     background-color: snow;
     padding: 0.5em;
     margin: 1em;
+    font-family: monospace;
 }
 #basic_result .score {
     color: darkgrey;
+    text-align: right;
 }
-#basic_result .point.rank0 {
+#basic_result .point {
+    text-align: right;
+}
+#basic_result .rank0 {
     font-weight: bold;
     color: dodgerblue;
 }
@@ -144,6 +149,11 @@ div.pot .unit {
     font-size: smaller;
     text-align: center;
     padding: 0.4em;
+}
+#basic_result .scorediff {
+    font-size: smaller;
+    text-align: right;
+    color: navy;
 }
 
 table.score_table {

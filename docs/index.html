@@ -78,13 +78,17 @@
 
         <div id="area_basic_result">
             <div id="basic_result" v-if="typeof players[0].pointResult !== 'undefined'">
-                <p v-show="labelCalcType">{{ labelCalcType }}</p>
+                <h6 v-show="labelCalcType">{{ labelCalcType }}</h6>
+                <p class="scorediff">
+                    <template v-for="dinf in listScoreDiff"><span class="name">{{ dinf[0] }}</span> <span class="diff">{{dinf[1]}}</span><br /></template>
+                </p>
+
                 <table>
-                    <tr><th></th><th>累計pt</th><th>半荘得点</th></tr>
+                    <tr><th></th><th>累計pt</th><th class="score">半荘得点</th></tr>
                     <tr v-for="(player, i) in players">
-                        <td><span class="name">{{ player.name }}</span></td>
-                        <td><span v-bind:class="`point rank${player.rankpointResult}`">{{ formatPointResult(player.pointResult) }}</span></td>
-                        <td><span class="score">({{ player.scoreResult }})</span></td>
+                        <td class="name"><span>{{ player.name }}</span></td>
+                        <td class="point"><span v-bind:class="`rank${player.rankpointResult}`">{{ formatPointResult(player.pointResult) }}</span></td>
+                        <td class="score"><span>({{ player.scoreResult }})</span></td>
                     </tr>
                 </table>
             </div>
