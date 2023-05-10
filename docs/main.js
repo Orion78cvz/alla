@@ -12,10 +12,12 @@ class PlayerInfo {
     pointResult; //半荘終了時のポイント
     rankScoreResult; //本局終了時のスコア順位
     rankPointResult; //半荘終了時のポイント順位
+    initialSeat; //起家(0)からの席順
 
-    constructor(name, is_leader, score, point) {
+    constructor(name, init_seat, score, point) {
         this.name = name;
-        this.isLeader = is_leader;
+        this.initialSeat = init_seat;
+        this.isLeader = (init_seat == 3); //memo: 人数固定
         this.scoreCurrent = score;
         this.pointCurrent = point;
     }
@@ -36,16 +38,18 @@ const VueApp = {
             bonus_point_fst: 15, //ウマ
 
             players: [
-                new PlayerInfo("自分", false, 20000, 0),
-                new PlayerInfo("下家", false, 35000, 0),
-                new PlayerInfo("対面", false, 30000, 0),
-                new PlayerInfo("上家", true, 15000, 0)],
+                new PlayerInfo("自分", 2, 20000, 0),
+                new PlayerInfo("下家", 3, 35000, 0),
+                new PlayerInfo("対面", 0, 30000, 0),
+                new PlayerInfo("上家", 1, 15000, 0)],
+
+            is_4th_round: true, //東4局or南4局 (起家を親に連動させる)
             player_positions_label: ["me", "right", "opposite", "left"],
 
             score_table: score_table,
 
             potStack: 0, //積み棒
-            potReach: 0, //立直棒(キャリーオーバー分のみ)
+            potReach: 0, //立直棒(キャリーオーバー分のみで今の局に出た分は含まない)
 
             scoreTsumo: 2000,
             scoreTsumoFromLeader: 4000,
@@ -115,14 +119,18 @@ const VueApp = {
             this.calcPointRanking();
         },
         calcScoreRanking() {
-            //todo: 同点起家有利の処理 (比較時スコアに起家から3,2,1,0加算すればよさそう)
-            let sorted = this.players.slice().sort((a, b) => b.scoreResult - a.scoreResult);
+            let sorted = this.players.slice().sort((a, b) => (b.scoreResult - b.initialSeat) - (a.scoreResult - a.initialSeat));
             for (let i = 0; i < 4; i++) { sorted[i].rankScoreResult = i; }
         },
         calcPointRanking() {
             //todo: 同点先着有利の処理
             let sorted = this.players.slice().sort((a, b) => b.pointResult - a.pointResult);
             for (let i = 0; i < 4; i++) { sorted[i].rankpointResult = i; }
+        },
+        setInitialSeat(init_leader) {
+            for (let i = 0; i < this.players.length; i++) {
+                this.players[i].initialSeat = (i - init_leader + this.players.length) % this.players.length;
+            }
         },
 
         //点数変動を計算
@@ -150,8 +158,26 @@ const VueApp = {
         //--- その他UI
 
         onChangeLeader(pi) {
+            //todo: この辺りの操作は結果を非表示に戻したい
             for (let pl of this.players) { pl.isLeader = false; }
             this.players[pi].isLeader = true;
+
+            if (this.is_4th_round) {
+                this.setInitialSeat((pi + 1) % this.players.length);
+            }
+        },
+        onChangeInitialLeader(pi) {
+            if (!this.is_4th_round) {
+                if (pi !== null) this.setInitialSeat(pi);
+            } else if (pi === null) { //親に連動させる
+                for (let l = 0; l < this.players.length; l++) {
+                    if (this.players[l].isLeader) {
+                        //this.onChangeLeader(l);
+                        this.setInitialSeat((l + 1) % this.players.length);
+                        break;
+                    }
+                }
+            }
         },
         setScoreRon(score, runproc) {
             if (score) {

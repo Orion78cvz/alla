@@ -58,6 +58,9 @@ div.tab_group input:checked + .tab + .panel {
     margin-right: 1em;
 }
 
+#conf_player .init_seat {
+    text-align: center;
+}
 
 /*ƒƒCƒ“ƒpƒlƒ‹*/
 #current_status {
