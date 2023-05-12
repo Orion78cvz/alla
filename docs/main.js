@@ -1,4 +1,4 @@
-import { score_table } from "./score_table.js";
+import score_table from "./score_table.json" assert { type: 'json' };
 
 ///////
 //
