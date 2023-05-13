@@ -51,6 +51,44 @@ div.tab_group input:checked + .tab + .panel {
     display: block;
 }
 
+/* トグルボタン汎用 */
+div.toggleswitch {
+    position: relative;
+    background: white;
+}
+div.toggleswitch input[type="checkbox"] {
+    display: none;
+}
+div.toggleswitch label {
+    position: absolute;
+    display: inline-block;
+    box-sizing: border-box;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    width: 2.5em;
+    height: 80%;
+    top: 10%;
+    border: 1px solid silver;
+    border-radius: 1em;
+}
+div.toggleswitch input[type="checkbox"]:checked + label {
+    background-color: cornflowerblue;
+}
+div.toggleswitch .swbutton {
+    position: absolute;
+    width: 0.75em;
+    height: 0.75em;
+    background: darkgray;
+    left: 5%;
+    top: 15%;
+    border-radius: 1em;
+    transition: .2s;
+}
+div.toggleswitch input[type="checkbox"]:checked + label .swbutton {
+    transform: translateX(175%); /* XXX: 右寄せを使うべきか */
+    background-color: white;
+}
+
 /*設定用タブ*/
 #config_group .tab {
 }

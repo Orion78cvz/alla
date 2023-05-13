@@ -35,6 +35,7 @@
                 <hr />
                 <ul>
                     <li>同点は起親に近い方を優先</li>
+                    <li>積み棒1本につき和了点に300点加算</li>
                 </ul>
             </div>
 
@@ -68,6 +69,11 @@
                         <span v-else><label>&nbsp;<input type="checkbox" v-model="player.isLeader" v-on:change="onChangeLeader(i)" />&nbsp;</label></span>
                     </p>
                     <p class="score"><input class="score" type="number" min="0" step="100" v-model.number="player.scoreCurrent" />点</p>
+                    <div class="toggleswitch">
+                        リーチ
+                        <input v-bind:id="'reach_' + player_positions_label[i]" type='checkbox' v-model="player.stateInReach" />
+                        <label v-bind:for="'reach_' + player_positions_label[i]"><span class="swbutton"></span></label>
+                    </div>
                 </div>
             </template>
 
@@ -75,12 +81,10 @@
                 <p>
                     <span class="label">積み棒: </span>
                     <span><input class="pot" type="number" min="0" step="1" v-model.number="potStack" /></span>
-                    <span class="unit">(x300)</span>
                 </p>
                 <p>
                     <span class="label">リーチ棒: </span>
                     <span><input class="pot" type="number" min="0" step="1" v-model.number="potReach" /></span>
-                    <span class="unit">(x1000)</span>
                 </p>
             </div>
 
@@ -114,7 +118,7 @@
             <label class="tab" for="tab_drawn">流局</label>
             <div class="panel drawn">
                 <button @click.prevent="procDrawn">流局</button>
-                (全員ノーテンorテンパイ)
+                (全員テンパイ)
             </div>
 
             <input type="radio" name="calc_basic_tab_name" id="tab_tsumo">

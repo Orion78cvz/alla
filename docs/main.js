@@ -13,6 +13,7 @@ class PlayerInfo {
     rankScoreResult; //本局終了時のスコア順位
     rankPointResult; //半荘終了時のポイント順位
     initialSeat; //起家(0)からの席順
+    stateInReach; //立直宣言しているかどうか
 
     constructor(name, init_seat, score, point) {
         this.name = name;
@@ -20,6 +21,7 @@ class PlayerInfo {
         this.isLeader = (init_seat == 3); //memo: 人数固定
         this.scoreCurrent = score;
         this.pointCurrent = point;
+        this.stateInReach = false;
     }
 }
 
@@ -69,9 +71,18 @@ const VueApp = {
 
         procDrawn() {
             //todo: 聴牌料計算
+            let br = this.potReach * 1000;
             for (let i = 0; i < 4; i++) {
                 this.players[i].scoreResult = this.players[i].scoreCurrent;
+                if (this.players[i].stateInReach) { //todo: ここは別途聴牌状態のフラグを持たせる
+                    this.players[i].scoreResult -= 1000;
+                    br += 1000;
+                }
             }
+            //未回収の立直棒はトップ者に加算する (memo: 得点に加算するより結果のポイントに加算した方が良いかもしれない)
+            let tp = this.calcScoreRanking();
+            tp.scoreResult += br;
+
             this.calcPoints();
 
             this.labelCalcType = "流局";
@@ -82,6 +93,10 @@ const VueApp = {
             this.players[0].scoreResult = this.players[0].scoreCurrent + this.scoreRon + this.potReach * 1000 + this.potStack * 300;
             for (let i = 1; i < 4; i++) {
                 this.players[i].scoreResult = this.players[i].scoreCurrent;
+                if (this.players[i].stateInReach) {
+                    this.players[i].scoreResult -= 1000;
+                    this.players[0].scoreResult += 1000;
+                }
             }
             this.players[this.playerRonFrom].scoreResult = this.players[this.playerRonFrom].scoreResult - this.scoreRon - this.potStack * 300;
 
@@ -96,8 +111,11 @@ const VueApp = {
                 let c = this.players[i].isLeader ? this.scoreTsumoFromLeader : this.scoreTsumo;
                 this.players[i].scoreResult = this.players[i].scoreCurrent - c - this.potStack * 100;
                 this.players[0].scoreResult = this.players[0].scoreResult + c;
+                if (this.players[i].stateInReach) {
+                    this.players[i].scoreResult -= 1000;
+                    this.players[0].scoreResult += 1000;
+                }
             }
-            console.log(this.players);
             this.calcPoints();
 
             this.labelCalcType = "ツモ";
@@ -121,6 +139,7 @@ const VueApp = {
         calcScoreRanking() {
             let sorted = this.players.slice().sort((a, b) => (b.scoreResult - b.initialSeat) - (a.scoreResult - a.initialSeat));
             for (let i = 0; i < 4; i++) { sorted[i].rankScoreResult = i; }
+            return sorted[0];
         },
         calcPointRanking() {
             //todo: 同点先着有利の処理
