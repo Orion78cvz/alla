@@ -20,7 +20,6 @@ alla
 ## Description
 
 TODO:
-- 立直、流局時聴牌の計算
 - 目的順位からの和了点計算
 
 ## Author
