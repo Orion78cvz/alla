@@ -118,7 +118,16 @@
             <label class="tab" for="tab_drawn">流局</label>
             <div class="panel drawn">
                 <button @click.prevent="procDrawn">流局</button>
-                (全員テンパイ)
+                <div class="isready" v-for="(player, i) in players">
+                    {{ player.name }}
+                    <span v-show="player.stateInReach">
+                        <label>リーチ</label>
+                    </span>
+                    <span v-show="!player.stateInReach">
+                        <label><input type="radio" v-bind:name="'isready_' + player_positions_label[i]" v-bind:value="true" v-model="isReadyAtEnd[i]" />テンパイ</label>
+                        <label><input type="radio" v-bind:name="'isready_' + player_positions_label[i]" v-bind:value="false" v-model="isReadyAtEnd[i]" />ノーテン</label>
+                    </span>
+                </div>
             </div>
 
             <input type="radio" name="calc_basic_tab_name" id="tab_tsumo">

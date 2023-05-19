@@ -53,6 +53,8 @@ const VueApp = {
             potStack: 0, //積み棒
             potReach: 0, //立直棒(キャリーオーバー分のみで今の局に出た分は含まない)
 
+            isReadyAtEnd: [false, true, false, true],
+
             scoreTsumo: 2000,
             scoreTsumoFromLeader: 4000,
 
@@ -70,23 +72,27 @@ const VueApp = {
         //--- 条件計算
 
         procDrawn() {
-            //todo: 聴牌料計算
+            let rc = 0; //聴牌人数
+            for (let i = 0; i < 4; i++) {
+                if (this.players[i].stateInReach || this.isReadyAtEnd[i]) { rc++; }
+            }
+
             let br = this.potReach * 1000;
             for (let i = 0; i < 4; i++) {
                 this.players[i].scoreResult = this.players[i].scoreCurrent;
-                if (this.players[i].stateInReach) { //todo: ここは別途聴牌状態のフラグを持たせる
+                if (this.players[i].stateInReach) {
                     this.players[i].scoreResult -= 1000;
                     br += 1000;
                 }
+
+                if (rc > 0 && rc < 4) {
+                    this.players[i].scoreResult += (this.players[i].stateInReach || this.isReadyAtEnd[i]) ? (3000 / rc) : (3000 / (rc - 4));
+                }
             }
-            //未回収の立直棒はトップ者に加算する (memo: 得点に加算するより結果のポイントに加算した方が良いかもしれない)
-            let tp = this.calcScoreRanking();
-            tp.scoreResult += br;
 
-            this.calcPoints();
-
-            this.labelCalcType = "流局";
             this.outputScoreDifference();
+            this.calcPoints(br);
+            this.labelCalcType = "流局";
         },
         procRon() {
             //info: ダブロンはひとまず非対応
@@ -100,10 +106,9 @@ const VueApp = {
             }
             this.players[this.playerRonFrom].scoreResult = this.players[this.playerRonFrom].scoreResult - this.scoreRon - this.potStack * 300;
 
-            this.calcPoints();
-
-            this.labelCalcType = "ロン";
             this.outputScoreDifference();
+            this.calcPoints(0);
+            this.labelCalcType = "ロン";
         },
         procTsumo() {
             this.players[0].scoreResult = this.players[0].scoreCurrent + this.potReach * 1000 + this.potStack * 300;
@@ -116,16 +121,16 @@ const VueApp = {
                     this.players[0].scoreResult += 1000;
                 }
             }
-            this.calcPoints();
 
-            this.labelCalcType = "ツモ";
             this.outputScoreDifference();
+            this.calcPoints(0);
+            this.labelCalcType = "ツモ";
         },
 
         //ポイント、順位計算
-        calcPoints() {
+        calcPoints(carryover) {
             this.checkTotalScore();
-            this.calcScoreRanking();
+            let tp = this.calcScoreRanking();
 
             let puma = [this.bonus_point_fst, this.bonus_point_snd, -this.bonus_point_snd, -this.bonus_point_fst];
             let soka = [(this.origin_score - this.initial_score) * 4, 0, 0, 0];
@@ -133,6 +138,7 @@ const VueApp = {
                 let s = pl.scoreResult + puma[pl.rankScoreResult] * 1000 + soka[pl.rankScoreResult] - this.origin_score;
                 pl.pointResult = pl.pointCurrent + s / 1000;
             }
+            tp.pointResult += carryover / 1000; //未回収の立直棒を半荘トップ者に加算する
 
             this.calcPointRanking();
         },

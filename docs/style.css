@@ -226,3 +226,11 @@ table.score_table .score.fixed {
 #calc_basic_group .tab {
     width: 6em;
 }
+
+.panel.drawn .isready{
+    margin-left: 1em;
+    margin-top: 0.5em;
+}
+.panel.drawn .isready label{
+    margin-left: 2em;
+}
