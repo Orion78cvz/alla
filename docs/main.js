@@ -221,7 +221,9 @@ const VueApp = {
             return (num > 0 ? "+" : "") + num.toFixed(1);
         },
 
-
+        onRotatePlayer() {
+            this.players.push(this.players.shift());
+        },
     }
 };
 

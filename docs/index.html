@@ -55,6 +55,10 @@
                 <ul>
                     <li><input type="checkbox" v-model="is_4th_round"  v-on:change="onChangeInitialLeader(null)"/> 東4局or南4局扱い (起家は親の下家とする)</li>
                 </ul>
+
+                <div>
+                    <input type="button" value="視点変更" v-on:click="onRotatePlayer()"/>
+                </div>
             </div>
 
             <div class="clear_float"></div>
